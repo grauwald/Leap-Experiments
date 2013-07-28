@@ -1,6 +1,4 @@
-Leap-Experiments
+#Leap-Experiments
 ================
 
-Leap Motion Experiments for Processing
-
-Initial Experiments with the Leap using [Leap Motion for Processing] (https://github.com/voidplus/leap-motion-processing)
+Leap Motion Experiments for Processing using the [Leap Motion for Processing] (https://github.com/voidplus/leap-motion-processing) library
