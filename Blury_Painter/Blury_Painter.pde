@@ -3,6 +3,8 @@ import de.voidplus.leapmotion.*;
 LeapMotion leap;
 
 PShader blur;
+PShader edges;  
+
 
 
 void setup() {
@@ -13,7 +15,7 @@ void setup() {
   // ...
 
   blur = loadShader("blur.glsl"); 
-
+  edges = loadShader("edges.glsl");
 
   leap = new LeapMotion(this);
 }
@@ -22,8 +24,6 @@ void draw() {
   //background(255);
   // ...
   int fps = leap.getFrameRate();
-
-  filter(blur);  
 
   // fill(0, 3);
   // rect(0, 0, width, height);
@@ -116,6 +116,11 @@ void draw() {
   //   float device_verical_view_angle = device.getVerticalViewAngle();
   //   float device_range = device.getRange();
   // }
+  
+ // filter(edges);
+  filter(blur);  
+
+  
 }
 
 void leapOnInit() {
