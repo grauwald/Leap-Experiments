@@ -2,18 +2,16 @@ import com.onformative.leap.LeapMotionP5;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Hand;
 import peasy.*;
-import oscP5.*;
-import netP5.*;
-
-
-TUIOServer tuioServer;
-TouchPoint simPoint;
+import punktiert.math.Vec;
+import punktiert.physics.*;
 
 PeasyCam cam;
-
+VPhysics physics;
+BAttraction attr;
 LeapMotionP5 leap;
 
-Hotpoint hotpoint1;
+// number of particles in the scene
+int amount = 200;
 
 
 int x;
@@ -25,32 +23,46 @@ PVector f1;
 // Size of each cell in the grid, ratio of window size to video size
 // 80 * 8 = 640
 // 60 * 8 = 480
-int videoScale = 80;
+int videoScale = 50;
 
 // Number of columns and rows in our system
 int cols, rows;
 
-TouchPoint[] touchPoints;
-
-static int globalTouchPointIndex;
-
 
 public void setup() {
-  size(700, 700, P3D);
+  size(800, 800, P3D);
   leap = new LeapMotionP5(this);
   cam = new PeasyCam(this, 1000);
   cam.setMinimumDistance(50);
   cam.setMaximumDistance(2000);
 
-  cols = screenWidth/videoScale;
-  rows = screenHeight/videoScale;
-  
-  hotpoint1 = new Hotpoint(200, 200, 800, 150);
+
+  cols = width/videoScale;
+  rows = height/videoScale;
+
+ physics = new VPhysics();
+
+  for (int i = 0; i < 1000; i++) {
+
+    Vec pos = new Vec(0, 0, 0).jitter(10);
+    Vec vel = new Vec(random(-1, 1), random(-1, 1), random(-1, 1));
+    VBoid p = new VBoid(pos, vel);
+
+    p.swarm.setSeperationScale(3.0f);
+    p.swarm.setSeperationRadius(50);
+    p.trail.setInPast(1);
+    physics.addParticle(p);
+
+    VSpring anchor = new VSpring(new VParticle(p.x(), p.y(), p.z()), p, 400, .05f);
+    physics.addSpring(anchor);
+  }
 }
 
 public void draw() {
   background(255);
- translate(-720,-500);
+
+
+  physics.update();
   noFill();
 
   // Begin loop for columns
@@ -74,7 +86,7 @@ public void draw() {
 
 
   for (Hand hand : leap.getHandList()) {
-    
+
 
     PVector handPos = leap.getPosition(hand);
     PVector sphere_center = leap.getSphereCenter(hand);
@@ -87,33 +99,28 @@ public void draw() {
     ellipse(handPos.x, handPos.y, ellipseSizeHand, ellipseSizeHand);
 
     arc(handPos.x, handPos.y, 60, 60, PI, TWO_PI);
-    hotpoint1.check(handPos);
 
-
-//begin hand visuals
-
+    stroke(0);
     pushMatrix();
     translate(handPos.x, handPos.y, handPos.z);
-   stroke(0);
-  
-  scale(sphere_radius/5);
-  beginShape();
-  vertex(-1, -1, -1);
-  vertex( 1, -1, -1);
-  vertex( 0,  0,  1);
+    scale(10);
+    beginShape();
+    vertex(-1, -1, -1);
+    vertex( 1, -1, -1);
+    vertex( 0, 0, 1);
 
-  vertex( 1, -1, -1);
-  vertex( 1,  1, -1);
-  vertex( 0,  0,  1);
+    vertex( 1, -1, -1);
+    vertex( 1, 1, -1);
+    vertex( 0, 0, 1);
 
-  vertex( 1, 1, -1);
-  vertex(-1, 1, -1);
-  vertex( 0, 0,  1);
+    vertex( 1, 1, -1);
+    vertex(-1, 1, -1);
+    vertex( 0, 0, 1);
 
-  vertex(-1,  1, -1);
-  vertex(-1, -1, -1);
-  vertex( 0,  0,  1);
-  endShape();
+    vertex(-1, 1, -1);
+    vertex(-1, -1, -1);
+    vertex( 0, 0, 1);
+    endShape();
     popMatrix();
 
 
@@ -126,6 +133,34 @@ public void draw() {
       float ellipseSizeHandStable = map(fingerPos.z, 300, -400, fingerPos.z/10, fingerPos.z/5);
       ellipse(fingerPos.x, fingerPos.y, ellipseSizeHandStable, ellipseSizeHandStable);
       println("finger" + fingerPos);
+      
+      rect(width/2, height/2, 200, 50, 50);
+      //particle
+      noStroke();
+      noFill();
+     for (int i = 0; i < physics.particles.size(); i++) {
+    VBoid boid = (VBoid) physics.particles.get(i);
+
+    strokeWeight(5);
+    stroke(0);
+    point(fingerPos.x, fingerPos.y*3, boid.z);
+    
+    if (frameCount > 50) {
+        boid.trail.setInPast(100);
+      }
+
+    strokeWeight(1);
+    stroke(200, 0, 0);
+    noFill();
+    beginShape();
+    for (int j=0;j<boid.trail.particles.size();j++) {
+      VParticle t = boid.trail.particles.get(j);
+      vertex(fingerPos.x, t.y, t.z);
+    }
+    endShape();
+     }
+      noStroke();
+      noFill();
 
       stroke(0, 0, 255);
       arc(fingerPos.x, fingerPos.y, 60, 60, PI, TWO_PI);
@@ -133,30 +168,13 @@ public void draw() {
       strokeWeight(1);
       pushMatrix();
       translate(fingerPos.x, fingerPos.y, fingerPos.z);
-        beginShape();
-        scale(10);
-        
-  vertex(-1, -1, -1);
-  vertex( 1, -1, -1);
-  vertex( 0,  0,  1);
+      sphereDetail(10, 10);
+      sphere(5);
 
-  vertex( 1, -1, -1);
-  vertex( 1,  1, -1);
-  vertex( 0,  0,  1);
-
-  vertex( 1, 1, -1);
-  vertex(-1, 1, -1);
-  vertex( 0, 0,  1);
-
-  vertex(-1,  1, -1);
-  vertex(-1, -1, -1);
-  vertex( 0,  0,  1);
-  endShape();
       popMatrix();
     }
   }
 }
-
 public void stop() {
   leap.stop();
 }
