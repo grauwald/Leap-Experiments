@@ -69,7 +69,7 @@ public void setup() {
 }
 
 public void draw() {
-  background(255);
+  background(230);
   stroke(255, 0, 0);
 
 
@@ -145,6 +145,8 @@ public void draw() {
 
 
   for (Hand hand : leap.getHandList()) {
+    
+   // Hand getHand(int handNr);
     ArrayList handList = leap.getHandList();
     PVector handPos = leap.getPosition(hand);
     PVector sphere_center = leap.getSphereCenter(hand);
@@ -167,19 +169,22 @@ public void draw() {
 
 
       stroke(0, 255, 0);
-      strokeWeight(1);
+      strokeWeight(.5);
       float ellipseSizeHand = map(handPos.z, 300, -400, handPos.z/10, handPos.z/5);
       ellipse(handPos.x, handPos.y, ellipseSizeHand, ellipseSizeHand);
 
 
 
-      strokeWeight(1);
+      strokeWeight(.5);
       arc(handPos.x, handPos.y, 60, 60, PI, TWO_PI);
 
       stroke(0);
       pushMatrix();
+      beginShape();
       translate(handPos.x, handPos.y, handPos.z);
       ellipse(0, 0, 50, 50);
+      
+      
       popMatrix();
 
       stroke(0);
@@ -190,7 +195,7 @@ public void draw() {
 
       beginShape();
       stroke(50, 20, 120);
-      strokeWeight(1);
+      strokeWeight(.7);
       vertex(handVel.x, handVel.y, handVel.z);
       vertex(handDir.x, handDir.y, handDir.z);
       endShape();
@@ -202,9 +207,11 @@ public void draw() {
       vertex(handPos.x, handPos.y, handPos.z);
       stroke(120, 120, 120);
       vertex(fingerOrigin.x, fingerOrigin.y, fingerOrigin.z);
+      noStroke();
+      stroke(fingerPos.x, fingerPos.y, fingerPos.z);
       vertex(fingerPos.x, fingerPos.y, fingerPos.z);
       noStroke();
-      stroke(0, 0, 255);
+      stroke(0);
       vertex(fingerPos.x, fingerPos.y-10, fingerPos.z+250); 
       fill(handPos.x, handPos.y, handPos.z);
       vertex(fingerOrigin.x, fingerOrigin.y, fingerOrigin.z); 
@@ -290,10 +297,10 @@ line(0,0,100,100);
       ellipse(0, 0, 20, 20);
       println("finger" + fingerPos);
       popMatrix();
-
+stroke(100);
       pushMatrix();
       translate(fingerOrigin.x, fingerOrigin.y, fingerOrigin.z);
-      ellipse(0, 0, 20, 20);
+      ellipse(0, 0, 10, 10);
       popMatrix();
 
       //particle
