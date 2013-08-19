@@ -36,6 +36,7 @@ public void setup() {
   cam.setMinimumDistance(50);
   cam.setMaximumDistance(2000);
 
+
   cols = width/videoScale;
   rows = height/videoScale;
 
@@ -49,7 +50,7 @@ public void setup() {
 
   for (int i = 0; i < amount; i++) {
     // val for arbitrary radius
-    float rad = random(2, 20);
+    float rad = random(1, 20);
     // vector for position
     Vec pos = new Vec(random(rad, width - rad), random(rad, height - rad));
     // create particle (Vec pos, mass, radius)
@@ -63,6 +64,7 @@ public void setup() {
 
 public void draw() {
   background(255);
+
 
   physics.update();
   noFill();
@@ -135,17 +137,23 @@ public void draw() {
       float ellipseSizeHandStable = map(fingerPos.z, 300, -400, fingerPos.z/10, fingerPos.z/5);
       ellipse(fingerPos.x, fingerPos.y, ellipseSizeHandStable, ellipseSizeHandStable);
       println("finger" + fingerPos);
+      
+      
       //particle
-      stroke(200, 0, 0);
+      noStroke();
+      noFill();
       // set pos to fingerPosition
       attr.setAttractor(new Vec(fingerPos.x, fingerPos.y, fingerPos.z));
       ellipse(attr.getAttractor().x, attr.getAttractor().y, attr.getRadius(), attr.getRadius());
 
       noStroke();
+      noFill();
       fill(0, 255);
       for (VParticle p : physics.particles) {
-        ellipse(p.x, p.y, p.getRadius() * 2, p.getRadius() * 2);
+        ellipse(p.x, p.y, p.getRadius() * -2, p.getRadius() * -2);
       }
+      noStroke();
+      noFill();
 
       stroke(0, 0, 255);
       arc(fingerPos.x, fingerPos.y, 60, 60, PI, TWO_PI);

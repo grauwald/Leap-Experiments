@@ -212,9 +212,9 @@ public void draw() {
       vertex(fingerPos.x, fingerPos.y, fingerPos.z);
       noStroke();
       stroke(0);
-      vertex(fingerPos.x, fingerPos.y-10, fingerPos.z+250); 
+      vertex(fingerPos.x, fingerPos.y-10, fingerPos.z+250);
       fill(handPos.x, handPos.y, handPos.z);
-      vertex(fingerOrigin.x, fingerOrigin.y, fingerOrigin.z); 
+      vertex(fingerOrigin.x, fingerOrigin.y, fingerOrigin.z);
       vertex(sphere_center.x, sphere_center.y+10, sphere_center.z+150);
       endShape(CLOSE);
       
@@ -250,9 +250,9 @@ public void draw() {
 
       pushMatrix();
       translate(sphere_center.x, sphere_center.y, sphere_center.z);
-      rotateX(radians(map(pitch,  0, 90, 0, 180)));
-    //  rotateY(radians(map(yaw, 1, 90, 90, -90)));
-    //  rotateZ(radians(map(roll, -40, 40, 45, -45)));
+      rotateX(radians(map(pitch, 0, 90, 0, 180)));
+    // rotateY(radians(map(yaw, 1, 90, 90, -90)));
+    // rotateZ(radians(map(roll, -40, 40, 45, -45)));
 
       stroke(0, 0, 255);
       noFill();
@@ -261,9 +261,9 @@ public void draw() {
 
       pushMatrix();
       translate(sphere_center.x, sphere_center.y, sphere_center.z);
-   //   rotateX(radians(map(pitch, -180, 180, 180, -180)));
+   // rotateX(radians(map(pitch, -180, 180, 180, -180)));
       rotateY(radians(map(yaw, 0, 90, 0, 180)));
-   //   rotateZ(radians(map(roll, -180, 180, 180, -180)));
+   // rotateZ(radians(map(roll, -180, 180, 180, -180)));
       stroke(255, 0, 0);
       strokeWeight(1);
     
@@ -273,8 +273,8 @@ public void draw() {
       
             pushMatrix();
       translate(sphere_center.x, sphere_center.y, sphere_center.z);
-     // rotateX(radians(map(pitch,  0, 90, 0, 180)));
-    //  rotateY(radians(map(yaw, 1, 90, 90, -90)));
+     // rotateX(radians(map(pitch, 0, 90, 0, 180)));
+    // rotateY(radians(map(yaw, 1, 90, 90, -90)));
      rotateZ(radians(map(roll, 0, 90, 0, 180)));
 
       stroke(0, 200, 0);
@@ -348,4 +348,3 @@ void button(float theValue) {
 public void stop() {
   leap.stop();
 }
-
