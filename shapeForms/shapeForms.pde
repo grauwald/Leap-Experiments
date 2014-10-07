@@ -11,6 +11,9 @@ import de.voidplus.leapmotion.*;
 
 LeapMotion leap;
 
+int totalGeodes = 40; // 2*5*4 joints
+Geode[] geodes; 
+
 void setup() {
   size(displayWidth, displayHeight, P3D);
   background(0);
@@ -18,6 +21,21 @@ void setup() {
 
   ellipseMode(CENTER);
   rectMode(CENTER);
+  colorMode(HSB);
+  
+  
+  geodes = new Geode[totalGeodes]; // 5*2*4 joints
+  
+  for (int i=0; i<totalGeodes; i++) {
+    float radiusMax = random(555,777); 
+    int totalVertex = round(random(5,10));
+    int totalSegments = round(random(5,10)); 
+    float noiseAmp = random(4,17);
+    color strokeColor = color(128,128,255,11); 
+    color fillColorLower = color(64,255,196,16); 
+    color fillColorUpper  = color(96,16,128,0);
+    Geode geode = new Geode(radiusMax, totalVertex, totalSegments, noiseAmp, strokeColor, fillColorLower, fillColorUpper );
+  }
 
   // ...
 
@@ -27,7 +45,6 @@ void setup() {
 void draw() {
 
  // ambientLight(0, 0, 0);
-  lightFalloff(1.0, 0.01, 0.0);
 
   pushMatrix();
   translate(width*.5, height*.5, 0);
@@ -45,9 +62,6 @@ void draw() {
 
   // ...
   int fps = leap.getFrameRate();
-
-
-
 
   // ========= HANDS =========
 
@@ -76,7 +90,7 @@ void draw() {
     //    println("hand_pitch: "+hand_pitch);
     //    println("hand_yaw: "+hand_yaw);
 
-    pointLight( 255, 255, 255, hand_stabilized.x, hand_stabilized.y, hand_stabilized.z);
+    pointLight( 255, 255, 255, hand_stabilized.x, hand_stabilized.y-200, hand_stabilized.z);
 
 
     // ========= FINGERS =========
@@ -91,87 +105,40 @@ void draw() {
       PVector pjoint =  finger_last.getPositionOfJointTip();
       PVector joint = finger_current.getPositionOfJointTip();
 
-      PVector norm;
-
-     
-      norm = new PVector(pjoint.x, pjoint.y, pjoint.z);
-      norm.normalize();
-      normal(norm.x, norm.y, norm.z);
-      vertex(pjoint.x, pjoint.y, pjoint.z);
-      norm = new PVector(joint.x, joint.y, joint.z);
-      norm.normalize();
-      normal(norm.x, norm.y, norm.z);
-      vertex(joint.x, joint.y, joint.z);
+      drawBoneWeb(pjoint, joint);
 
       pjoint =  finger_last.getPositionOfJointDip();
       joint = finger_current.getPositionOfJointDip();
 
-      norm = new PVector(pjoint.x, pjoint.y, pjoint.z);
-      norm.normalize();
-      normal(norm.x, norm.y, norm.z);
-      vertex(pjoint.x, pjoint.y, pjoint.z);
-      norm = new PVector(joint.x, joint.y, joint.z);
-      norm.normalize();
-      normal(norm.x, norm.y, norm.z);
-      vertex(joint.x, joint.y, joint.z);
+      drawBoneWeb(pjoint, joint);
 
       pjoint =  finger_last.getPositionOfJointPip();
       joint = finger_current.getPositionOfJointPip();
 
-      norm = new PVector(pjoint.x, pjoint.y, pjoint.z);
-      norm.normalize();
-      normal(norm.x, norm.y, norm.z);
-      vertex(pjoint.x, pjoint.y, pjoint.z);
-      norm = new PVector(joint.x, joint.y, joint.z);
-      norm.normalize();
-      normal(norm.x, norm.y, norm.z);
-      vertex(joint.x, joint.y, joint.z);
+      drawBoneWeb(pjoint, joint);
 
       pjoint =  finger_last.getPositionOfJointMcp();
       joint = finger_current.getPositionOfJointMcp();
 
-      norm = new PVector(pjoint.x, pjoint.y, pjoint.z);
-      norm.normalize();
-      normal(norm.x, norm.y, norm.z);
-      vertex(pjoint.x, pjoint.y, pjoint.z);
-      norm = new PVector(joint.x, joint.y, joint.z);
-      norm.normalize();
-      normal(norm.x, norm.y, norm.z);
-      vertex(joint.x, joint.y, joint.z);
+      drawBoneWeb(pjoint, joint);
       
-      
-//        pjoint = finger_last.get
-//        joint = finger_current.getPosition();
-//        
-//        norm = new PVector(pjoint.x, pjoint.y, pjoint.z);
-//        norm.normalize();
-//        normal(norm.x, norm.y, norm.z);
-//        vertex(pjoint.x, pjoint.y, pjoint.z);
-//        norm = new PVector(joint.x, joint.y, joint.z);
-//        norm.normalize();
-//        normal(norm.x, norm.y, norm.z);
-//        vertex(joint.x, joint.y, joint.z);
-      
+
       
     }
     endShape();
   }
 }
 
-// ========= CALLBACKS =========
+void drawBoneWeb(PVector pjoint, PVector joint){
+      PVector norm;
 
-void leapOnInit() {
-  // println("Leap Motion Init");
-}
-void leapOnConnect() {
-  // println("Leap Motion Connect");
-}
-void leapOnFrame() {
-  // println("Leap Motion Frame");
-}
-void leapOnDisconnect() {
-  // println("Leap Motion Disconnect");
-}
-void leapOnExit() {
-  // println("Leap Motion Exit");
+      norm = new PVector(pjoint.x, pjoint.y, pjoint.z);
+      norm.normalize();
+      normal(norm.x, norm.y, norm.z);
+      vertex(pjoint.x, pjoint.y, pjoint.z);
+      
+      norm = new PVector(joint.x, joint.y, joint.z);
+      norm.normalize();
+      normal(norm.x, norm.y, norm.z);
+      vertex(joint.x, joint.y, joint.z);
 }
