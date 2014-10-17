@@ -8,11 +8,8 @@
 */
 
 import de.voidplus.leapmotion.*;
-
 LeapMotion leap;
 
-int totalGeodes = 40; // 2*5*4 joints
-Geode[] geodes; 
 
 void setup() {
   size(displayWidth, displayHeight, P3D);
@@ -24,21 +21,6 @@ void setup() {
   colorMode(HSB);
   
   
-  geodes = new Geode[totalGeodes]; // 5*2*4 joints
-  
-  for (int i=0; i<totalGeodes; i++) {
-    float radiusMax = random(555,777); 
-    int totalVertex = round(random(5,10));
-    int totalSegments = round(random(5,10)); 
-    float noiseAmp = random(4,17);
-    color strokeColor = color(128,128,255,11); 
-    color fillColorLower = color(64,255,196,16); 
-    color fillColorUpper  = color(96,16,128,0);
-    Geode geode = new Geode(radiusMax, totalVertex, totalSegments, noiseAmp, strokeColor, fillColorLower, fillColorUpper );
-  }
-
-  // ...
-
   leap = new LeapMotion(this);
 }
 
